@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הספירה לאחור | מנחם & מינדי</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600&family=Playfair+Display+SC:wght@700&family=Frank+Ruhl+Libre:wght@300;500;700;900&display=swap');
+
+        :root {
+            --gold-light: #F9F1CC;
+            --gold-main: #D4AF37;
+            --gold-dark: #AA8C2C;
+            --bg-dark: #0a0a0a;
+            --bg-panel: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-image 1s ease;
+        }
+
+        .site-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(42, 37, 21, 0.8) 0%, rgba(10, 10, 10, 0.95) 80%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.2; }
+            100% { transform: translateY(-100px) translateX(50px) scale(1.5); opacity: 0.6; }
+        }
+
+        .hero {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 200px 200px 10px 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--gold-main), transparent, var(--gold-dark));
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.15);
+            animation: glow 4s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 20px 50px rgba(212, 175, 55, 0.1); }
+            100% { box-shadow: 0 20px 80px rgba(212, 175, 55, 0.4); }
+        }
+
+        .hero img {
+            width: 100%;
+            border-radius: 190px 190px 8px 8px;
+            display: block;
+            filter: contrast(1.05) brightness(0.95);
+        }
+
+        h1 {
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-top: 30px;
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0px 4px 20px rgba(212, 175, 55, 0.2);
+            letter-spacing: 2px;
+        }
+
+        .countdown-container {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0 20px;
+            justify-content: center;
+        }
+
+        .time-box {
+            background: var(--bg-panel);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px 25px;
+            min-width: 100px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .time-box span {
+            display: block;
+            font-family: 'Playfair Display SC', serif;
+            font-size: 3.5rem;
+            color: var(--gold-light);
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .time-box label {
+            font-size: 1.1rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .scroll-to-blessings-container {
+            margin: 15px 0 40px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .btn-scroll-blessings {
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid var(--gold-main);
+            color: var(--gold-light);
+            padding: 12px 28px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+        }
+        
+        .btn-scroll-blessings:hover {
+            background: var(--gold-main);
+            color: #000;
+            box-shadow: 0 4px 25px rgba(212, 175, 55, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .cube {
+            background: var(--bg-panel);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .cube::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.2), transparent);
+            transform: skewX(-25deg);
+            transition: 0.7s;
+        }
+
+        .cube:hover:not(.locked) {
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--gold-main);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2), inset 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .cube:hover:not(.locked)::before {
+            left: 200%;
+        }
+
+        .cube-number {
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.1);
+            -webkit-text-stroke: 1px var(--gold-main);
+            transition: 0.4s;
+        }
+
+        .cube:hover:not(.locked) .cube-number {
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+            -webkit-text-stroke: 0px;
+        }
+
+        .cube-text {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            transition: 0.4s;
+        }
+
+        .cube:hover:not(.locked) .cube-text {
+            color: var(--gold-main);
+        }
+
+        .cube.locked {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            box-shadow: none;
+        }
+        
+        .cube.locked .cube-text::after {
+            content: ' (נעול)';
+            font-size: 0.8rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: radial-gradient(circle at center, #1a1a1a, #050505);
+            padding: 60px 50px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--gold-dark);
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.15);
+            transform: scale(0.8) translateY(30px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active.flash-lights {
+            animation: backgroundFlash 1.2s ease-in-out 3 alternate;
+        }
+        .modal-overlay.active.flash-lights .modal-content {
+            animation: borderStrobe 0.3s ease-in-out 5 alternate;
+        }
+
+        @keyframes backgroundFlash {
+            0% { background: rgba(0, 0, 0, 0.85); }
+            50% { background: rgba(54, 44, 15, 0.9); }
+            100% { background: rgba(15, 13, 5, 0.95); }
+        }
+
+        @keyframes borderStrobe {
+            0% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); border-color: var(--gold-dark); }
+            100% { box-shadow: 0 0 90px rgba(255, 241, 204, 0.8); border-color: #fff; }
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 25px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: 0.3s;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--gold-main);
+            transform: rotate(90deg);
+        }
+
+        .modal-text {
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 2.5rem;
+            line-height: 1.3;
+            color: var(--gold-light);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            margin-top: 20px;
+        }
+
+        .modal-day {
+            font-family: 'Assistant', sans-serif;
+            font-size: 1.2rem;
+            color: var(--gold-dark);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        /* --- קונטיינר אודיו מעודכן עם סליידר ווליום מובנה --- */
+        .audio-control-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            direction: ltr;
+            background: rgba(15, 15, 15, 0.7);
+            padding: 6px 12px;
+            border-radius: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .volume-slider-wrapper {
+            width: 0px;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .audio-control-container.slider-open .volume-slider-wrapper {
+            width: 90px;
+            opacity: 1;
+            margin-right: 5px;
+        }
+        
+        #audio-volume-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            background: #444;
+            height: 5px;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        #audio-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--gold-main);
+            box-shadow: 0 0 8px var(--gold-main);
+            cursor: pointer;
+        }
+
+        .audio-btn {
+            background: linear-gradient(135deg, rgba(30,30,30,0.9), rgba(10,10,10,0.9));
+            border: 2px solid var(--gold-main);
+            color: var(--gold-light);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            outline: none;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .audio-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--gold-light);
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        }
+
+        .audio-btn.playing {
+            animation: pulseMusic 1.5s infinite ease-in-out;
+        }
+
+        .audio-btn.playing #icon-play { display: block; }
+        .audio-btn.playing #icon-mute { display: none; }
+        .audio-btn:not(.playing) #icon-play { display: none; }
+        .audio-btn:not(.playing) #icon-mute { display: block; }
+
+        @keyframes pulseMusic {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.6); }
+            70% { box-shadow: 0 0 0 14px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        .audio-hint {
+            background: linear-gradient(135deg, var(--gold-main), var(--gold-dark));
+            color: #000;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            white-space: nowrap;
+            animation: hintJump 1s infinite alternate;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes hintJump {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-6px); }
+        }
+
+        /* --- Blessings Section --- */
+        .blessings-section {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto 80px;
+            padding: 40px;
+            background: var(--bg-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .blessings-section h2 {
+            color: var(--gold-main);
+            margin-bottom: 20px;
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 2rem;
+        }
+
+        .blessings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .blessings-form input, .blessings-form textarea {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #444;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+        }
+        
+        .blessings-form input:focus, .blessings-form textarea:focus {
+            outline: none;
+            border-color: var(--gold-main);
+        }
+
+        .blessings-form textarea {
+            height: 100px;
+        }
+
+        /* --- Premium Floating Bubbles Animation --- */
+        #floating-blessings-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; 
+            z-index: 998;
+            overflow: hidden;
+        }
+
+        .floating-blessing {
+            position: absolute;
+            pointer-events: auto; 
+            background: linear-gradient(135deg, rgba(25, 22, 15, 0.95), rgba(10, 10, 10, 0.98));
+            border: 1px solid var(--gold-main);
+            color: var(--gold-light);
+            padding: 16px 26px;
+            border-radius: 30px;
+            font-size: 1.15rem;
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.1);
+            white-space: nowrap;
+            opacity: 0;
+            backdrop-filter: blur(5px);
+            animation: floatBubbleUp 14s linear forwards;
+            max-width: 320px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        @keyframes floatBubbleUp {
+            0% { transform: translateY(105vh) translateX(0) scale(0.7); opacity: 0; }
+            10% { opacity: 1; transform: translateY(90vh) translateX(15px) scale(1); }
+            40% { transform: translateY(50vh) translateX(-25px) scale(1.05); }
+            70% { transform: translateY(25vh) translateX(20px) scale(0.98); }
+            95% { opacity: 1; }
+            100% { transform: translateY(-15vh) translateX(-10px) scale(0.85); opacity: 0; }
+        }
+
+        /* Admin Panels & Management */
+        .admin-trigger {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            z-index: 9999;
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .admin-trigger:hover {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-panel-content {
+            text-align: right;
+            padding: 30px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .admin-panel-content h2 {
+            color: var(--gold-main);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .admin-input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .file-upload-wrapper {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .admin-input-group input[type="file"] {
+            background: #222;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            font-family: inherit;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold-main), var(--gold-dark));
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #a83232, #7a1f1f);
+            margin-top: 15px;
+            width: 100%;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #d48c37, #a66a22);
+            margin-top: 10px;
+            width: 100%;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .admin-blessings-list, .admin-slots-list {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            border-radius: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .admin-blessing-item, .admin-slot-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #222;
+            font-size: 0.95rem;
+        }
+
+        .admin-blessing-item button {
+            background: #cc3333;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .admin-blessing-item button:hover {
+            background: #ff4444;
+        }
+
+        .status-text {
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="site-overlay"></div>
+    <div class="particles" id="particles"></div>
+    <div id="floating-blessings-container"></div>
+
+    <div class="admin-trigger" id="admin-trigger">⚙️</div>
+
+    <div class="audio-control-container">
+        <div class="audio-hint" id="audio-hint-text">לחץ כאן 🎵</div>
+        <div class="volume-slider-wrapper">
+            <input type="range" id="audio-volume-slider" min="0" max="1" step="0.05" value="1" title="עוצמת שמע">
+        </div>
+        <button class="audio-btn" id="global-audio-btn" title="הפעל/השתק מוזיקה">
+            <svg id="icon-play" viewBox="0 0 24 24">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+            <svg id="icon-mute" viewBox="0 0 24 24">
+                <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+            </svg>
+        </button>
+    </div>
+
+    <audio id="bg-audio-player" loop></audio>
+
+    <header class="hero">
+        <div class="image-wrapper">
+            <img src="image_9801e4.jpg" alt="מנחם ומינדי" onerror="this.src='https://via.placeholder.com/600x400/D4AF37/ffffff?text=Menachem+%26+Mindy'">
+        </div>
+        <h1>מנחם & מינדי</h1>
+        
+        <div class="countdown-container">
+            <div class="time-box">
+                <span id="days">10</span>
+                <label>ימים</label>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <label>שעות</label>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <label>דקות</label>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <label>שניות</label>
+            </div>
+        </div>
+
+        <div class="scroll-to-blessings-container">
+            <button class="btn-scroll-blessings" onclick="document.getElementById('blessings-target').scrollIntoView({ behavior: 'smooth' });">
+                לברכות גלול למטה ↓
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="grid" id="cubes-container"></div>
+    </div>
+
+    <section class="blessings-section" id="blessings-target">
+        <h2>שתפו ברכה למנחם & מינדי</h2>
+        <form class="blessings-form" id="blessing-form">
+            <input type="text" id="blessing-name" placeholder="השם שלכם" required>
+            <textarea id="blessing-text" placeholder="הברכה שלכם..." required></textarea>
+            <button type="submit" class="btn">שלח ברכה ועוף לשמיים 🎈</button>
+        </form>
+    </section>
+
+    <div class="modal-overlay" id="punchline-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-punchline">&times;</span>
+            <div class="modal-day" id="modal-day-title">יום 0</div>
+            <div class="modal-text" id="modal-text-content">טקסט</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="admin-modal">
+        <div class="modal-content admin-panel-content">
+            <span class="close-btn" id="close-admin">&times;</span>
+            <h2>ניהול מאחורי הקלעים</h2>
+            
+            <div class="admin-input-group">
+                <label>החלף תמונת רקע לכל האתר:</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="bg-file-input" accept="image/*">
+                    <button class="btn" id="save-bg-btn">שמור רקע</button>
+                </div>
+            </div>
+
+            <div class="admin-input-group" style="margin-top: 20px;">
+                <label>העלאת שיר רקע לאתר (תומך בקבצים ענקיים!):</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="audio-file-input" accept="audio/*">
+                    <button class="btn" id="save-audio-btn">שמור שיר</button>
+                </div>
+            </div>
+
+            <div class="admin-input-group" style="margin-top: 20px;">
+                <label>עריכת תוכן המשבצות והסודות (10 ימים):</label>
+                <div class="admin-slots-list" id="admin-slots-container" style="max-height: 250px;">
+                    </div>
+                <button class="btn" id="save-punchlines-btn" style="margin-top: 10px; background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white;">💾 שמור טקסטים לקוביות</button>
+            </div>
+
+            <div class="admin-input-group" style="margin-top: 20px;">
+                <label>ניהול ומחיקת ברכות מהאתר:</label>
+                <div class="admin-blessings-list" id="admin-blessings-container">
+                    </div>
+            </div>
+
+            <hr style="border-color:#333; margin: 25px 0;">
+
+            <button class="btn btn-danger" id="start-countdown-btn">🚀 התחל ספירה לאחור מחדש (10 ימים מלאים)</button>
+            <button class="btn btn-warning" id="restart-countdown-btn" style="display:none;">🔄 איפוס מערכת ספירה</button>
+            
+            <div class="status-text" id="admin-status"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // ============================================
+        // 1. הגדרות בסיס ונתוני ברירת מחדל
+        // ============================================
+        window.defaultPunchlines = {
+            10: "עשרה ימים! ההתרגשות מתחילה רשמית עכשיו, פותחים יומנים.",
+            9: "תשעה ימים! דיאטת טרום-החופה בוטלה רשמית, עוברים לתזונת אדרנלין.",
+            8: "שמונה ימים! יאללה, להכניס להילוך גבוה, החליפות מוכנות?",
+            7: "שבוע בדיוק! זמן מצוין לבדוק שוב שהטבעת אכן בטוחה ולא נכנסה לכביסה.",
+            6: "שישה ימים! מינדי כבר סגרה הכל לפני חודשיים, מנחם רק מתחיל לעכל.",
+            5: "חמישה ימים של טירוף חושים. חלומות על סידורי הושבה הופכים למציאות.",
+            4: "ארבעה ימים! אפשר להפסיק לרענן את תחזית מזג האוויר. יהיה מושלם.",
+            3: "שלושה ימים! הפלייליסט של החתונה כבר מנגן בלופ בראש.",
+            2: "מחרתיים! הפרפרים בבטן כבר מזמן הפכו ללהקת ציפורים שלמה.",
+            1: "מנחם & מינדי מזל טוב היום הגדול הגיע"
+        };
+        
+        window.punchlines = JSON.parse(localStorage.getItem('weddingPunchlines')) || window.defaultPunchlines;
+        let isCountdownStarted = localStorage.getItem('weddingCountdownStarted') === 'true';
+        let countdownStartTime = parseInt(localStorage.getItem('weddingStartTime')) || 0;
+
+        // ============================================
+        // 2. חיבור לענן (Firebase) - מנגנון אל-כשל
+        // ============================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "YOUR_APP_ID"
+        };
+        
+        try {
+            // האתר לא יקרוס אם לא החלפת את ה-API Key, הוא פשוט יעבוד על הזיכרון המקומי.
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                const app = initializeApp(firebaseConfig);
+                const firebaseDB = getDatabase(app);
+                
+                const punchlinesRef = ref(firebaseDB, 'wedding/punchlines');
+                onValue(punchlinesRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        window.punchlines = data; 
+                        if (document.getElementById('admin-modal').classList.contains('active') && window.renderAdminSlots) {
+                            window.renderAdminSlots();
+                        }
+                    }
+                });
+            
+                window.savePunchlinesToCloud = function(newPunchlines) {
+                    set(ref(firebaseDB, 'wedding/punchlines'), newPunchlines)
+                        .then(() => alert("הקוביות נשמרו בענן ויעודכנו אצל כל המשתמשים!"))
+                        .catch((error) => alert("שגיאה בשמירה בענן: " + error));
+                };
+            }
+        } catch (e) {
+            console.warn("Firebase is not configured. Using local storage instead.");
+        }
+
+        // ============================================
+        // 3. אחסון מקומי לשיר הרקע (IndexedDB)
+        // ============================================
+        let audioDB;
+        const request = indexedDB.open("WeddingSiteDB", 2);
+        
+        request.onupgradeneeded = function(event) {
+            audioDB = event.target.result;
+            if (!audioDB.objectStoreNames.contains("media")) {
+                audioDB.createObjectStore("media");
+            }
+        };
+
+        request.onsuccess = function(event) {
+            audioDB = event.target.result;
+            loadAudioFromDB();
+        };
+
+        function saveAudioToDB(file) {
+            const transaction = audioDB.transaction(["media"], "readwrite");
+            const store = transaction.objectStore("media");
+            store.put(file, "bgMusic");
+            transaction.oncomplete = () => {
+                alert("שיר הרקע נשמר בהצלחה במסד הנתונים של הדפדפן!");
+                loadAudioFromDB();
+            };
+        }
+
+        function loadAudioFromDB() {
+            const transaction = audioDB.transaction(["media"], "readonly");
+            const store = transaction.objectStore("media");
+            const getRequest = store.get("bgMusic");
+            
+            getRequest.onsuccess = () => {
+                if(getRequest.result) {
+                    const audioURL = URL.createObjectURL(getRequest.result);
+                    audioPlayer.src = audioURL;
+                    tryAutoplay();
+                }
+            };
+        }
+
+        // ============================================
+        // 4. לוגיקת נגן האודיו והרקע המותאם
+        // ============================================
+        let customBgData = localStorage.getItem('weddingBgData'); 
+        if (customBgData) { document.body.style.backgroundImage = `url('${customBgData}')`; }
+
+        const audioPlayer = document.getElementById('bg-audio-player');
+        const globalAudioBtn = document.getElementById('global-audio-btn');
+        const audioHintText = document.getElementById('audio-hint-text');
+        const audioVolumeSlider = document.getElementById('audio-volume-slider');
+        const audioContainer = document.querySelector('.audio-control-container');
+
+        function tryAutoplay() {
+            audioPlayer.play().then(() => {
+                globalAudioBtn.classList.add('playing');
+                audioHintText.style.display = "none";
+            }).catch(() => {
+                globalAudioBtn.classList.remove('playing');
+            });
+        }
+
+        const autoplayEvents = ['click', 'touchstart', 'mousemove', 'scroll'];
+        autoplayEvents.forEach(evt => {
+            window.addEventListener(evt, () => {
+                if (audioPlayer.paused && !audioPlayer.dataset.manuallyMuted) {
+                    audioPlayer.play().then(() => {
+                        globalAudioBtn.classList.add('playing');
+                        audioHintText.style.display = "none";
+                    }).catch(()=>{});
+                }
+            }, { once: true });
+        });
+
+        audioVolumeSlider.addEventListener('input', function() {
+            audioPlayer.volume = this.value;
+            audioPlayer.muted = (this.value == 0);
+        });
+
+        const toggleAudio = (e) => {
+            e.stopPropagation();
+            audioContainer.classList.toggle('slider-open');
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                audioPlayer.dataset.manuallyMuted = "";
+                globalAudioBtn.classList.add('playing');
+                audioHintText.style.display = "none";
+            }
+        };
+
+        globalAudioBtn.addEventListener('click', toggleAudio);
+        audioHintText.addEventListener('click', toggleAudio);
+
+        document.addEventListener('click', (e) => {
+            if (!audioContainer.contains(e.target)) {
+                audioContainer.classList.remove('slider-open');
+            }
+        });
+
+        function playCubeUnlockSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                let osc1 = ctx.createOscillator();
+                let gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(523.25, ctx.currentTime); 
+                osc1.frequency.exponentialRampToValueAtTime(1046.50, ctx.currentTime + 0.3);
+                gain1.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start();
+                osc1.stop(ctx.currentTime + 0.3);
+            } catch (e) { }
+        }
+
+        // ============================================
+        // 5. בניית הקוביות, ספירה לאחור ואנימציות
+        // ============================================
+        const gridContainer = document.getElementById('cubes-container');
+        const now = Date.now();
+        const daysPassed = isCountdownStarted ? Math.floor((now - countdownStartTime) / (1000 * 60 * 60 * 24)) : -1;
+
+        for (let i = 10; i >= 1; i--) {
+            const cube = document.createElement('div');
+            cube.className = 'cube';
+            const isUnlocked = isCountdownStarted && ((10 - i) <= daysPassed);
+            
+            if (!isUnlocked) cube.classList.add('locked');
+
+            cube.innerHTML = `<span class="cube-number">${i}</span><span class="cube-text">לחשוף את הסוד</span>`;
+            cube.addEventListener('click', () => { if (isUnlocked) openPunchlineModal(i); });
+            gridContainer.appendChild(cube);
+        }
+
+        const updateCountdown = () => {
+            if (!isCountdownStarted) {
+                document.getElementById("days").innerText = "10";
+                return;
+            }
+            const distance = (countdownStartTime + (10 * 24 * 60 * 60 * 1000)) - Date.now();
+            if (distance <= 0) {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                return;
+            }
+            const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? '0' + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? '0' + seconds : seconds;
+        };
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        const punchlineModal = document.getElementById('punchline-modal');
+        function openPunchlineModal(dayIndex) {
+            document.getElementById('modal-day-title').innerText = `— נותרו ${dayIndex} ימים —`;
+            document.getElementById('modal-text-content').innerHTML = window.punchlines[dayIndex];
+            punchlineModal.classList.add('active', 'flash-lights');
+            playCubeUnlockSound();
+            setTimeout(() => punchlineModal.classList.remove('flash-lights'), 1200);
+        }
+        document.getElementById('close-punchline').addEventListener('click', () => punchlineModal.classList.remove('active', 'flash-lights'));
+
+        // חלקיקים מרחפים
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            let particle = document.createElement('div');
+            particle.classList.add('particle');
+            let size = Math.random() * 8 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            particlesContainer.appendChild(particle);
+        }
+
+        // ============================================
+        // 6. פאנל הניהול והעריכה
+        // ============================================
+        const adminModal = document.getElementById('admin-modal');
+        const adminSlotsContainer = document.getElementById('admin-slots-container');
+        const adminBlessingsContainer = document.getElementById('admin-blessings-container');
+
+        window.renderAdminSlots = function() {
+            adminSlotsContainer.innerHTML = '';
+            for(let i = 10; i >= 1; i--) {
+                const item = document.createElement('div');
+                item.className = 'admin-slot-item';
+                item.style.flexDirection = 'column';
+                item.style.alignItems = 'flex-start';
+                item.style.gap = '8px';
+                item.innerHTML = `
+                    <label style="color: var(--gold-main); font-weight: bold;">יום ${i}:</label>
+                    <textarea id="edit-cube-${i}" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid #555; color: #fff; border-radius: 5px; resize: vertical; min-height: 50px;">${window.punchlines[i]}</textarea>
+                `;
+                adminSlotsContainer.appendChild(item);
+            }
+        };
+
+        document.getElementById('save-punchlines-btn').addEventListener('click', () => {
+            for(let i = 10; i >= 1; i--) {
+                window.punchlines[i] = document.getElementById(`edit-cube-${i}`).value;
+            }
+            if(window.savePunchlinesToCloud) {
+                window.savePunchlinesToCloud(window.punchlines);
+            } else {
+                localStorage.setItem('weddingPunchlines', JSON.stringify(window.punchlines));
+                alert('הסודות נשמרו מקומית בלבד (הענן טרם הוגדר).');
+            }
+        });
+
+        function renderAdminBlessings() {
+            adminBlessingsContainer.innerHTML = '';
+            if (savedBlessings.length === 0) {
+                adminBlessingsContainer.innerHTML = '<div style="color:#666; text-align:center; padding:10px;">אין ברכות במערכת עדיין</div>';
+                return;
+            }
+            savedBlessings.forEach((b, index) => {
+                const item = document.createElement('div');
+                item.className = 'admin-blessing-item';
+                item.innerHTML = `
+                    <span><strong>${b.name}:</strong> ${b.text.substring(0, 20)}...</span>
+                    <button id="del-bless-${index}">מחק 🗑️</button>
+                `;
+                adminBlessingsContainer.appendChild(item);
+                
+                // הוספת אירוע מחיקה ספציפי
+                document.getElementById(`del-bless-${index}`).addEventListener('click', () => {
+                    if (confirm("האם למחוק ברכה זו לצמיתות מהאתר?")) {
+                        savedBlessings.splice(index, 1);
+                        localStorage.setItem('weddingBlessings', JSON.stringify(savedBlessings));
+                        renderAdminBlessings();
+                    }
+                });
+            });
+        }
+
+        document.getElementById('admin-trigger').addEventListener('click', () => {
+            const password = prompt("הכנס קוד גישה למערכת:");
+            if (password === "1234") {
+                adminModal.classList.add('active');
+                renderAdminBlessings();
+                window.renderAdminSlots(); 
+                
+                if (isCountdownStarted) {
+                    document.getElementById('start-countdown-btn').innerText = "🔄 התחל ספירה מחדש (10 ימים)";
+                    document.getElementById('restart-countdown-btn').style.display = "block";
+                    document.getElementById('admin-status').innerText = "הספירה פעילה. הימים מחושבים כלפי מעלה.";
+                }
+            } else if (password !== null) {
+                alert("קוד שגוי.");
+            }
+        });
+
+        document.getElementById('close-admin').addEventListener('click', () => adminModal.classList.remove('active'));
+
+        document.getElementById('save-bg-btn').addEventListener('click', () => {
+            const file = document.getElementById('bg-file-input').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('weddingBgData', e.target.result);
+                    document.body.style.backgroundImage = `url('${e.target.result}')`;
+                    alert("תמונת הרקע עודכנה בהצלחה!");
+                };
+                reader.readAsDataURL(file);
+            } else { alert("אנא בחר קובץ תמונה תחילה."); }
+        });
+
+        document.getElementById('save-audio-btn').addEventListener('click', () => {
+            const file = document.getElementById('audio-file-input').files[0];
+            if (file) saveAudioToDB(file); else alert("אנא בחר קובץ מוזיקה תחילה.");
+        });
+
+        document.getElementById('start-countdown-btn').addEventListener('click', () => {
+            if (confirm("האם אתה בטוח? הספירה תתחיל מ-10 ימים מלאים בדיוק מהרגע הנוכחי.")) {
+                localStorage.setItem('weddingCountdownStarted', 'true');
+                localStorage.setItem('weddingStartTime', Date.now().toString());
+                alert("הספירה לאחור ל-10 ימים מלאים הופעלה מחדש!");
+                location.reload();
+            }
+        });
+
+        document.getElementById('restart-countdown-btn').addEventListener('click', () => {
+            if (confirm("בטוח שברצונך לאפס? זה יחזיר את האתר למצב המתנה וינעל את כל הקוביות.")) {
+                localStorage.removeItem('weddingCountdownStarted');
+                localStorage.removeItem('weddingStartTime');
+                alert("הספירה אופסה.");
+                location.reload();
+            }
+        });
+
+        // ============================================
+        // 7. מערכת הברכות המרחפות
+        // ============================================
+        const blessingsContainer = document.getElementById('floating-blessings-container');
+        let savedBlessings = JSON.parse(localStorage.getItem('weddingBlessings')) || [];
+        
+        function createGlitterExplosion(x, y) {
+            for (let i = 0; i < 24; i++) {
+                const p = document.createElement('div');
+                p.style.position = 'fixed'; p.style.left = x + 'px'; p.style.top = y + 'px';
+                p.style.width = (Math.random() * 8 + 3) + 'px'; p.style.height = p.style.width;
+                p.style.borderRadius = '50%'; p.style.pointerEvents = 'none'; p.style.zIndex = '99999';
+                p.style.background = Math.random() > 0.5 ? 'var(--gold-light)' : '#ffffff';
+                p.style.boxShadow = '0 0 8px ' + (Math.random() > 0.5 ? 'var(--gold-main)' : '#fff');
+                const angle = Math.random() * Math.PI * 2; const speed = Math.random() * 120 + 60;
+                const destX = Math.cos(angle) * speed; const destY = Math.sin(angle) * speed;
+                document.body.appendChild(p);
+                const anim = p.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${destX}px, ${destY}px) scale(0)`, opacity: 0 }
+                ], { duration: Math.random() * 500 + 500, easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)' });
+                anim.onfinish = () => p.remove();
+            }
+        }
+
+        function spawnFloatingBlessing(name, text) {
+            if (document.querySelectorAll(`[data-sender="${name}"]`).length >= 2) return; 
+
+            const el = document.createElement('div');
+            el.className = 'floating-blessing';
+            el.setAttribute('data-sender', name);
+            el.innerHTML = `<strong>${name}:</strong> "${text}"<small style="display:block; font-size:0.75rem; color:var(--gold-main); opacity:0.9; margin-top:5px; text-align:center;">לחצו עליי ✨</small>`;
+            el.style.left = `${Math.random() * 75}vw`;
+            const randomDuration = Math.random() * 4 + 10; 
+            el.style.animationDuration = `${randomDuration}s`;
+            
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                createGlitterExplosion(e.clientX, e.clientY);
+                el.remove();
+            });
+            
+            blessingsContainer.appendChild(el);
+            setTimeout(() => { if (el.parentNode) el.remove(); }, randomDuration * 1000);
+        }
+
+        if(savedBlessings.length > 0) {
+            setInterval(() => {
+                if(savedBlessings.length > 0) {
+                    const randomBlessing = savedBlessings[Math.floor(Math.random() * savedBlessings.length)];
+                    spawnFloatingBlessing(randomBlessing.name, randomBlessing.text);
+                }
+            }, 2500); 
+        }
+
+        document.getElementById('blessing-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('blessing-name').value;
+            const text = document.getElementById('blessing-text').value;
+
+            savedBlessings.push({name, text});
+            localStorage.setItem('weddingBlessings', JSON.stringify(savedBlessings));
+            spawnFloatingBlessing(name, text);
+            
+            const subject = encodeURIComponent("ברכה למנחם ומינדי");
+            const body = encodeURIComponent(`ברכה מאת: ${name}\n\n${text}`);
+            window.location.href = `mailto:minsysh@gmail.com?subject=${subject}&body=${body}`;
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
