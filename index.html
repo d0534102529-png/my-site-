@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -350,7 +351,7 @@
             display: inline-block;
         }
 
-        /* --- קונטיינר אודיו מעודכן עם סליידר ווליום מובנה --- */
+        /* --- קונטיינר אודיו --- */
         .audio-control-container {
             position: fixed;
             top: 20px;
@@ -516,7 +517,6 @@
             height: 100px;
         }
 
-        /* --- Premium Floating Bubbles Animation --- */
         #floating-blessings-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -555,7 +555,7 @@
             100% { transform: translateY(-15vh) translateX(-10px) scale(0.85); opacity: 0; }
         }
 
-        /* Admin Panels & Management */
+        /* Admin Panels */
         .admin-trigger {
             position: fixed;
             bottom: 15px;
@@ -785,15 +785,13 @@
 
             <div class="admin-input-group" style="margin-top: 20px;">
                 <label>עריכת תוכן המשבצות והסודות (10 ימים):</label>
-                <div class="admin-slots-list" id="admin-slots-container" style="max-height: 250px;">
-                    </div>
+                <div class="admin-slots-list" id="admin-slots-container" style="max-height: 250px;"></div>
                 <button class="btn" id="save-punchlines-btn" style="margin-top: 10px; background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white;">💾 שמור טקסטים לקוביות</button>
             </div>
 
             <div class="admin-input-group" style="margin-top: 20px;">
-                <label>ניהול ומחיקת ברכות מהאתר:</label>
-                <div class="admin-blessings-list" id="admin-blessings-container">
-                    </div>
+                <label>ניהול ומחיקת ברכות מהאתר (מסונכרן לענן):</label>
+                <div class="admin-blessings-list" id="admin-blessings-container"></div>
             </div>
 
             <hr style="border-color:#333; margin: 25px 0;">
@@ -807,7 +805,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         // ============================================
         // 1. הגדרות בסיס ונתוני ברירת מחדל
@@ -828,45 +826,62 @@
         window.punchlines = JSON.parse(localStorage.getItem('weddingPunchlines')) || window.defaultPunchlines;
         let isCountdownStarted = localStorage.getItem('weddingCountdownStarted') === 'true';
         let countdownStartTime = parseInt(localStorage.getItem('weddingStartTime')) || 0;
+        let savedBlessings = []; // מערך הברכות שעכשיו יגיע מהענן!
 
         // ============================================
-        // 2. חיבור לענן (Firebase) - מנגנון אל-כשל
+        // 2. חיבור לענן (Firebase) - עם הנתונים שלך!
         // ============================================
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-            projectId: "YOUR_PROJECT",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyAcyEhI3slQAl26A2ctcCkj8PSsL2hAWLg",
+            authDomain: "bvfdszv.firebaseapp.com",
+            databaseURL: "https://bvfdszv-default-rtdb.firebaseio.com",
+            projectId: "bvfdszv",
+            storageBucket: "bvfdszv.firebasestorage.app",
+            messagingSenderId: "874928683202",
+            appId: "1:874928683202:web:f179a19035b7b965d7e35b",
+            measurementId: "G-KW1GZYCGR2"
         };
         
+        let firebaseDB;
         try {
-            // האתר לא יקרוס אם לא החלפת את ה-API Key, הוא פשוט יעבוד על הזיכרון המקומי.
-            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                const app = initializeApp(firebaseConfig);
-                const firebaseDB = getDatabase(app);
-                
-                const punchlinesRef = ref(firebaseDB, 'wedding/punchlines');
-                onValue(punchlinesRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        window.punchlines = data; 
-                        if (document.getElementById('admin-modal').classList.contains('active') && window.renderAdminSlots) {
-                            window.renderAdminSlots();
-                        }
-                    }
-                });
+            const app = initializeApp(firebaseConfig);
+            firebaseDB = getDatabase(app);
             
-                window.savePunchlinesToCloud = function(newPunchlines) {
-                    set(ref(firebaseDB, 'wedding/punchlines'), newPunchlines)
-                        .then(() => alert("הקוביות נשמרו בענן ויעודכנו אצל כל המשתמשים!"))
-                        .catch((error) => alert("שגיאה בשמירה בענן: " + error));
-                };
-            }
+            // סנכרון קוביות (סודות)
+            const punchlinesRef = ref(firebaseDB, 'wedding/punchlines');
+            onValue(punchlinesRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    window.punchlines = data; 
+                    if (document.getElementById('admin-modal').classList.contains('active') && window.renderAdminSlots) {
+                        window.renderAdminSlots();
+                    }
+                }
+            });
+        
+            window.savePunchlinesToCloud = function(newPunchlines) {
+                set(ref(firebaseDB, 'wedding/punchlines'), newPunchlines)
+                    .then(() => alert("הקוביות נשמרו בענן ויעודכנו אצל כל המשתמשים!"))
+                    .catch((error) => alert("שגיאה בשמירה בענן: " + error));
+            };
+
+            // סנכרון ברכות חיות מכל המשתמשים!
+            const blessingsRef = ref(firebaseDB, 'wedding/blessings');
+            onValue(blessingsRef, (snapshot) => {
+                const data = snapshot.val();
+                savedBlessings = []; 
+                if (data) {
+                    for (let key in data) {
+                        savedBlessings.push({ id: key, name: data[key].name, text: data[key].text });
+                    }
+                }
+                if (document.getElementById('admin-modal').classList.contains('active')) {
+                    renderAdminBlessings();
+                }
+            });
+
         } catch (e) {
-            console.warn("Firebase is not configured. Using local storage instead.");
+            console.warn("שגיאת חיבור ל-Firebase:", e);
         }
 
         // ============================================
@@ -1088,9 +1103,6 @@
             }
             if(window.savePunchlinesToCloud) {
                 window.savePunchlinesToCloud(window.punchlines);
-            } else {
-                localStorage.setItem('weddingPunchlines', JSON.stringify(window.punchlines));
-                alert('הסודות נשמרו מקומית בלבד (הענן טרם הוגדר).');
             }
         });
 
@@ -1100,21 +1112,20 @@
                 adminBlessingsContainer.innerHTML = '<div style="color:#666; text-align:center; padding:10px;">אין ברכות במערכת עדיין</div>';
                 return;
             }
-            savedBlessings.forEach((b, index) => {
+            savedBlessings.forEach((b) => {
                 const item = document.createElement('div');
                 item.className = 'admin-blessing-item';
                 item.innerHTML = `
                     <span><strong>${b.name}:</strong> ${b.text.substring(0, 20)}...</span>
-                    <button id="del-bless-${index}">מחק 🗑️</button>
+                    <button id="del-bless-${b.id}">מחק 🗑️</button>
                 `;
                 adminBlessingsContainer.appendChild(item);
                 
-                // הוספת אירוע מחיקה ספציפי
-                document.getElementById(`del-bless-${index}`).addEventListener('click', () => {
-                    if (confirm("האם למחוק ברכה זו לצמיתות מהאתר?")) {
-                        savedBlessings.splice(index, 1);
-                        localStorage.setItem('weddingBlessings', JSON.stringify(savedBlessings));
-                        renderAdminBlessings();
+                // הוספת אירוע מחיקה ספציפי מהענן
+                document.getElementById(`del-bless-${b.id}`).addEventListener('click', () => {
+                    if (confirm("האם למחוק ברכה זו לצמיתות מהאתר ומהענן?")) {
+                        remove(ref(firebaseDB, `wedding/blessings/${b.id}`));
+                        // האתר יתרנדר מחדש אוטומטית בזכות onValue שכתבנו למעלה!
                     }
                 });
             });
@@ -1176,10 +1187,9 @@
         });
 
         // ============================================
-        // 7. מערכת הברכות המרחפות
+        // 7. מערכת הברכות המרחפות (שופץ כדי לתמוך בענן!)
         // ============================================
         const blessingsContainer = document.getElementById('floating-blessings-container');
-        let savedBlessings = JSON.parse(localStorage.getItem('weddingBlessings')) || [];
         
         function createGlitterExplosion(x, y) {
             for (let i = 0; i < 24; i++) {
@@ -1221,22 +1231,26 @@
             setTimeout(() => { if (el.parentNode) el.remove(); }, randomDuration * 1000);
         }
 
-        if(savedBlessings.length > 0) {
-            setInterval(() => {
-                if(savedBlessings.length > 0) {
-                    const randomBlessing = savedBlessings[Math.floor(Math.random() * savedBlessings.length)];
-                    spawnFloatingBlessing(randomBlessing.name, randomBlessing.text);
-                }
-            }, 2500); 
-        }
+        // טיימר קבוע שזורק ברכות אקראיות מהענן לאוויר
+        setInterval(() => {
+            if(savedBlessings.length > 0) {
+                const randomBlessing = savedBlessings[Math.floor(Math.random() * savedBlessings.length)];
+                spawnFloatingBlessing(randomBlessing.name, randomBlessing.text);
+            }
+        }, 3500); 
 
         document.getElementById('blessing-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('blessing-name').value;
             const text = document.getElementById('blessing-text').value;
 
-            savedBlessings.push({name, text});
-            localStorage.setItem('weddingBlessings', JSON.stringify(savedBlessings));
+            // שמירה לענן במקום שמירה מקומית בלבד (push יוצר ID ייחודי אוטומטית)
+            if (firebaseDB) {
+                push(ref(firebaseDB, 'wedding/blessings'), { name, text })
+                    .then(() => alert("הברכה נשלחה בהצלחה ותופיע אצל כולם! 🎈"))
+                    .catch((err) => alert("הייתה בעיה בשליחת הברכה: " + err));
+            }
+
             spawnFloatingBlessing(name, text);
             
             const subject = encodeURIComponent("ברכה למנחם ומינדי");
